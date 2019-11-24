@@ -7,7 +7,7 @@ brca_19 = pd.read_csv('BRCA_19_full_clones.txt', delimiter = '\t')
 # start stop and step variables 
 start, stop, step = 0, -1, 1
   
-# slicing till last element 
+# slicing last element 
 brca_19['aaSeqImputedFR4seq']= brca_19['aaSeqImputedFR4'].str.slice(start, stop, step)
 
 #merge character from all amino acid seq then make uppercase letter

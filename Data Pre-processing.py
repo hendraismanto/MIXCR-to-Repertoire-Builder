@@ -41,10 +41,7 @@ lis = []
 # checking if string contains list element 
 for test_string in brca_19['allVHitsWithScore']:
     res = any(ele in test_string[0:11] for ele in test_list)
-    lis.append(res)
-
-#invert value
-flipped_lis = np.invert(lis)
+    lis.append(not res)
 
 #erase nonfunctioning IG from data
-clear_brca_19 = brca_19[flipped_lis]
+clear_brca_19 = brca_19[lis]

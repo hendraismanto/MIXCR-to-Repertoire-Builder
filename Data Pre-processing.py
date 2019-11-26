@@ -51,8 +51,11 @@ def preprocess(data):
     
     return clear_data
 
-filenames = [os.path.splitext(val)[0] for val in glob('*full_clones.txt')]
-
+filenames = []
+for val in glob.glob('*full_clones.txt'):
+    file = os.path.splitext(val)[0]
+    filenames.append(file)
+    
 for filename in filenames:
     data = pd.read_csv(filename + '.txt', delimiter = '\t')
     if data.empty is True:

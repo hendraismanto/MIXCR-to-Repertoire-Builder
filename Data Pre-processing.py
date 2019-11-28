@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from glob import glob
+import glob
 
 def preprocess(data):
     #nonfunctioning IG name list

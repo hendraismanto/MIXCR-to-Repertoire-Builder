@@ -45,9 +45,13 @@ def preprocess(data):
     for test_string in data['allVHitsWithScore']:
         res = any(ele in test_string[0:11] for ele in test_list)
         lis.append(not res)
-    
+        
     #erase nonfunctioning IG from data
-    clear_data = data[lis]
+    N_clear = data[lis]
+    
+    #erase full ig containing out-of-frame indels (* and _)
+    clear_data = N_clear[~N_clear['full ig'].str.contains('\*|_')]
+
     
     return clear_data
 

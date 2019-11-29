@@ -65,4 +65,4 @@ for filename in filenames:
     if data.empty is True:
         continue
     else:
-        preprocess(data).to_csv(filename + '_preprocess.txt', sep = '\t', index = False)
+        preprocess(data).to_csv(filename + '_filtered.txt', sep = '\t', index = False)

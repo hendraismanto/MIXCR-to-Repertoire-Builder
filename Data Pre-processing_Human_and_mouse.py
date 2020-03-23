@@ -47,7 +47,7 @@ def preprocess(data):
     #merge character from all amino acid seq then make uppercase letter
     data['full ig'] = data['aaSeqImputedFR1'].fillna('').str.cat(data[['aaSeqImputedCDR1','aaSeqImputedFR2', 
                                                                             'aaSeqImputedCDR2', 'aaSeqImputedFR3', 
-                                                                            'aaSeqImputedCDR3', 'aaSeqImputedFR4seq']].fillna(''),sep="").str.upper()
+                                                                            'aaSeqImputedCDR3', 'aaSeqImputedFR4']].fillna(''),sep="").str.upper()
     
     #drop row containing NA in amino acid seq
     data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 
@@ -83,4 +83,4 @@ for filename in filenames:
     if data.empty is True:
         continue
     else:
-        preprocess(data).to_csv(filename + '_filtered.txt', sep = '\t', index = False)
+        preprocess(data, nonfunc_ig_human).to_csv(filename + '_filtered.txt', sep = '\t', index = False)

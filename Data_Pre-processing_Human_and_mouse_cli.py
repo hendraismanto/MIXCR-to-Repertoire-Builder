@@ -42,12 +42,12 @@ def preprocess(data, database):
     start, stop, step = 0, -1, 1
     
     # slicing till last element
-    data['aaSeqImputedFR4seq']= data['aaSeqImputedFR4'].str.slice(start, stop, step)
+    data['aaSeqImputedFR4']= data['aaSeqImputedFR4'].str.slice(start, stop, step)
     
     #merge character from all amino acid seq then make uppercase letter
     data['full ig'] = data['aaSeqImputedFR1'].fillna('').str.cat(data[['aaSeqImputedCDR1','aaSeqImputedFR2', 
                                                                             'aaSeqImputedCDR2', 'aaSeqImputedFR3', 
-                                                                            'aaSeqImputedCDR3', 'aaSeqImputedFR4seq']].fillna(''),sep="").str.upper()
+                                                                            'aaSeqImputedCDR3', 'aaSeqImputedFR4']].fillna(''),sep="").str.upper()
     
     #drop row containing NA in amino acid seq
     data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 

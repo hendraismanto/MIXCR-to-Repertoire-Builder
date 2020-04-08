@@ -112,7 +112,7 @@ def main():
 
     parser.add_argument('-i', dest = 'input_file', help = 'Input file in csv or txt extension')
     parser.add_argument('-s', dest = 'species', default = 'human', help = 'Species (human or mouse)')
-    parser.add_argument('-t', dest = 'type_job', default = 'nt', help = 'type of job (aa or nt)')
+    parser.add_argument('-t', dest = 'type_job', default = 'all', help = 'type of job (aa+nt or aa or nt)')
     parser.add_argument('-o', dest = 'out_dir', help = 'directory of output')
     args = parser.parse_args()
     
@@ -162,7 +162,58 @@ def main():
                         f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
                     f.close()
 
+            else if args.type_job == 'nt':
+                data = preprocess_nt(reader, nonfunc_ig_mouse)
+                print('processing mouse nt...')
+                
+                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
+                nona_data_h = heavy.fillna('')
+                
+                if nona_data_h.empty:
+                    print('No heavy chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
+                    for index, row in nona_data_h.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
+                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
+                nona_data_l = heavy.fillna('')
+                
+                if nona_data_l.empty:
+                    print('No light chain found!')
+                else:
+                    f = open(os.pat.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
+                    for index, row in nona_data_l.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+            
             else:
+                data = preprocess_aa(reader, nonfunc_ig_mouse)
+                print('processing mouse aa...')
+                
+                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
+                nona_data_h = heavy.fillna('')
+                
+                if nona_data_h.empty:
+                    print('No heavy chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
+                    for index, row in nona_data_h.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
+                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
+                nona_data_l = heavy.fillna('')
+                
+                if nona_data_l.empty:
+                    print('No light chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
+                    for index, row in nona_data_l.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+                
                 data = preprocess_nt(reader, nonfunc_ig_mouse)
                 print('processing mouse nt...')
                 
@@ -215,7 +266,58 @@ def main():
                         f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
                     f.close()
 
+            else if args.type_job == 'nt':
+                data = preprocess_nt(reader, nonfunc_ig_human)
+                print('processing human nt...')
+                
+                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
+                nona_data_h = heavy.fillna('')
+                
+                if nona_data_h.empty:
+                    print('No heavy chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
+                    for index, row in nona_data_h.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
+                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
+                nona_data_l = heavy.fillna('')
+                
+                if nona_data_l.empty:
+                    print('No light chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
+                    for index, row in nona_data_l.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
             else:
+                data = preprocess_aa(reader, nonfunc_ig_human)
+                print('processing human aa...')
+                
+                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
+                nona_data_h = heavy.fillna('')
+                
+                if nona_data_h.empty:
+                    print('No heavy chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
+                    for index, row in nona_data_h.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
+                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
+                nona_data_l = heavy.fillna('')
+                
+                if nona_data_l.empty:
+                    print('No light chain found!')
+                else:
+                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
+                    for index, row in nona_data_l.iterrows():
+                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+                    f.close()
+
                 data = preprocess_nt(reader, nonfunc_ig_human)
                 print('processing human nt...')
                 

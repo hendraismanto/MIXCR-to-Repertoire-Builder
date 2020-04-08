@@ -108,7 +108,7 @@ def preprocess_aa(data, database):
 
 def main():
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description = 'change MiXCR output into fasta for human and mouse aa/nt')
 
     parser.add_argument('-i', dest = 'input_file', help = 'Input file in csv or txt extension')
     parser.add_argument('-s', dest = 'species', default = 'human', help = 'Species (human or mouse)')

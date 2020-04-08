@@ -144,7 +144,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -155,7 +155,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -170,7 +170,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -181,7 +181,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.pat.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -196,7 +196,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -207,7 +207,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -221,7 +221,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -232,7 +232,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.pat.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -248,7 +248,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -259,7 +259,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -274,7 +274,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -285,7 +285,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -300,7 +300,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -311,7 +311,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
                     for index, row in nona_data_l.iterrows():
@@ -325,7 +325,7 @@ def main():
                 nona_data_h = heavy.fillna('')
                 
                 if nona_data_h.empty:
-                    print('No heavy chain found!')
+                    raise Exception('No heavy chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
                     for index, row in nona_data_h.iterrows():
@@ -336,7 +336,7 @@ def main():
                 nona_data_l = heavy.fillna('')
                 
                 if nona_data_l.empty:
-                    print('No light chain found!')
+                    raise Exception('No light chain found!')
                 else:
                     f = open(os.path.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
                     for index, row in nona_data_l.iterrows():

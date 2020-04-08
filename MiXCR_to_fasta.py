@@ -162,7 +162,7 @@ def main():
                         f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
                     f.close()
 
-            else if args.type_job == 'nt':
+            elif args.type_job == 'nt':
                 data = preprocess_nt(reader, nonfunc_ig_mouse)
                 print('processing mouse nt...')
                 
@@ -266,7 +266,7 @@ def main():
                         f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
                     f.close()
 
-            else if args.type_job == 'nt':
+            elif args.type_job == 'nt':
                 data = preprocess_nt(reader, nonfunc_ig_human)
                 print('processing human nt...')
                 

@@ -106,14 +106,67 @@ def preprocess_aa(data, database):
     
     return clear_data
 
+def preprocess_pseudo_aa(data, database):
+    
+    #merge character from all amino acid seq then make uppercase letter
+    data['full ig'] = data['aaSeqImputedCDR1'].fillna('').str.cat(data[['aaSeqImputedCDR2', 'aaSeqImputedCDR3']].fillna('')).str.upper()
+    
+    #drop row containing NA in amino acid seq
+    data.dropna(subset = ['nSeqImputedFR1', 'nSeqImputedCDR1', 
+                         'nSeqImputedFR2', 'nSeqImputedCDR2', 'nSeqImputedFR3', 'nSeqImputedFR4'], inplace = True)
+    
+    #erase IG seq which nonfunctioning
+    test_list = database
+    
+    #empty list for appending value
+    lis = []
+    
+    # checking if string contains list element
+    for test_string in data['allVHitsWithScore']:
+        res = any(ele in test_string[0:11] for ele in test_list)
+        lis.append(not res)
+        
+    #erase nonfunctioning IG from data
+    N_clear = data[lis]
+    
+    #erase full ig containing out-of-frame indels (* and _)
+    clear_data = N_clear[~N_clear['full ig'].str.contains('\*|_')]
+
+    return clear_data
+
+def data_exporter_heavy(data, filename_, filename_only, out_dir, suffix):
+    heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
+    nona_data_h = heavy.fillna('')
+                    
+    if nona_data_h.empty:
+        raise Exception('No heavy chain found!')
+    else:
+        f = open(os.path.join(out_dir, filename_only + suffix), 'w')
+        for index, row in nona_data_h.iterrows():
+            f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+        f.close()
+
+def data_exporter_light(data, filename_, filename_only, out_dir, suffix):
+    light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
+    nona_data_l = light.fillna('')
+                    
+    if nona_data_l.empty:
+        raise Exception('No light chain found!')
+    else:
+        f = open(os.path.join(out_dir, filename_only + suffix), 'w')
+        for index, row in nona_data_l.iterrows():
+            f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
+        f.close()
+
 def main():
 
     parser = argparse.ArgumentParser(description = 'change MiXCR output into fasta for human and mouse aa/nt')
 
-    parser.add_argument('-i', dest = 'input_file', help = 'Input file in csv or txt extension')
-    parser.add_argument('-s', dest = 'species', default = 'human', help = 'Species (human or mouse)')
-    parser.add_argument('-t', dest = 'type_job', default = 'all', help = 'type of job (aa+nt or aa or nt)')
+    parser.add_argument('-i', dest = 'input_file', help = 'Input file (tsv)')
+    parser.add_argument('-s', dest = 'species', default = 'human', help = 'Species (human or mouse) default = human')
+    parser.add_argument('-t', dest = 'type_job', default = 'all', help = 'type of job (aa+nt or aa or nt), default = aa&nt')
     parser.add_argument('-o', dest = 'out_dir', help = 'directory of output')
+    parser.add_argument('-p', dest = 'pseudo_aa', default = None, help = 'generate only pseudo aa seq (keyword = pseudo)')
     args = parser.parse_args()
     
     os.makedirs(args.out_dir, exist_ok=True)
@@ -134,217 +187,93 @@ def main():
 
     reader = pd.read_csv(filename, delimiter = '\t')
 
-    if reader.empty is False:
+    if args.pseudo_aa == 'pseudo':
         if args.species == 'mouse':
-            if args.type_job == 'aa':
-                data = preprocess_aa(reader, nonfunc_ig_mouse)
-                print('processing mouse aa...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+            data = preprocess_pseudo_aa(reader, nonfunc_ig_mouse)
+            print('processing mouse pseudo aa')
+       
+            data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_pseudo_aa.fa')
 
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+            data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_pseudo_aa.fa')
 
-            elif args.type_job == 'nt':
-                data = preprocess_nt(reader, nonfunc_ig_mouse)
-                print('processing mouse nt...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.pat.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-            
-            else:
-                data = preprocess_aa(reader, nonfunc_ig_mouse)
-                print('processing mouse aa...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-                
-                data = preprocess_nt(reader, nonfunc_ig_mouse)
-                print('processing mouse nt...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.pat.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
-            
         else:
-            if args.type_job == 'aa':
-                data = preprocess_aa(reader, nonfunc_ig_human)
-                print('processing human aa...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+            data = preprocess_pseudo_aa(reader, nonfunc_ig_human)
+            print('processing human pseudo aa')
 
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+            data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_pseudo_aa.fa')
 
-            elif args.type_job == 'nt':
-                data = preprocess_nt(reader, nonfunc_ig_human)
-                print('processing human nt...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+            data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_pseudo_aa.fa')
 
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+    elif args.pseudo_aa == None:
+        if reader.empty is False:
+            if args.species == 'mouse':
+                if args.type_job == 'aa':
+                    data = preprocess_aa(reader, nonfunc_ig_mouse)
+                    print('processing mouse aa...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_aa.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_aa.fa')
 
+                elif args.type_job == 'nt':
+                    data = preprocess_nt(reader, nonfunc_ig_mouse)
+                    print('processing mouse nt...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_nt.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_nt.fa')
+                
+                else:
+                    data = preprocess_aa(reader, nonfunc_ig_mouse)
+                    print('processing mouse aa...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_aa.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_aa.fa')
+
+                    data = preprocess_nt(reader, nonfunc_ig_mouse)
+                    print('processing mouse nt...')
+
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_nt.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_nt.fa')
+                
             else:
-                data = preprocess_aa(reader, nonfunc_ig_human)
-                print('processing human aa...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_aa.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+                if args.type_job == 'aa':
+                    data = preprocess_aa(reader, nonfunc_ig_human)
+                    print('processing human aa...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_aa.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_aa.fa')
 
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_aa.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+                elif args.type_job == 'nt':
+                    data = preprocess_nt(reader, nonfunc_ig_human)
+                    print('processing human nt...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_nt.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_nt.fa')
 
-                data = preprocess_nt(reader, nonfunc_ig_human)
-                print('processing human nt...')
-                
-                heavy = data.loc[data['allVHitsWithScore'].str.contains('IGHV')]
-                nona_data_h = heavy.fillna('')
-                
-                if nona_data_h.empty:
-                    raise Exception('No heavy chain found!')
                 else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_heavy_chain_nt.fa'), 'w')
-                    for index, row in nona_data_h.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+                    data = preprocess_aa(reader, nonfunc_ig_human)
+                    print('processing human aa...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_aa.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_aa.fa')
 
-                light = data.loc[data['allVHitsWithScore'].str.contains('IGKV |IGLV')]
-                nona_data_l = heavy.fillna('')
-                
-                if nona_data_l.empty:
-                    raise Exception('No light chain found!')
-                else:
-                    f = open(os.path.join(args.out_dir, filename_ + '_light_chain_nt.fa'), 'w')
-                    for index, row in nona_data_l.iterrows():
-                        f.write('>' + filename_only + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
-                    f.close()
+                    data = preprocess_nt(reader, nonfunc_ig_human)
+                    print('processing human nt...')
+                    
+                    data_exporter_heavy(data, filename_, filename_only, args.out_dir, '_heavy_chain_nt.fa')
+                    
+                    data_exporter_light(data, filename_, filename_only, args.out_dir, '_light_chain_nt.fa')
+        else:
+            print('file empty!!')
+            sys.exit()
     else:
-        print('file empty!!')
-        sys.exit()
+        print('you should write "pseudo" after -p argument')
 
 if __name__ == '__main__':
     start_time = time.time()

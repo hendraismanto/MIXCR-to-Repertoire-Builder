@@ -1,11 +1,19 @@
 # MIXCR-to-FASTA
+
 make MiXCR output into FASTA that used in model building of Repertoire Builder and clustering in CD-HIT
 
-Dependencies:
+## Getting Started
+
+### Dependencies
+
+```
 Pyhton 3.7 and above
 Pandas (0.25.3)
+```
 
-usage:
+### Usage
+
+```
 MiXCR_to_fasta.py [-h] [-i INPUT_FILE] [-s SPECIES] [-t TYPE_JOB] [-o OUT_DIR] [-p PSEUDO_AA]
 
 optional arguments:
@@ -15,5 +23,8 @@ optional arguments:
   -t TYPE_JOB   Type of job (aa+nt, aa-only, or nt-only) default = aa&nt
   -o OUT_DIR    Output Directory
   -p PSEUDO_AA  Generate Pseudo aa seq-only (CDR1 + CDR2 + CDR3) you must input pseudo as argument
+  ```
   
+  ## Author
   
+  * **Hendra Saputra Ismanto** 

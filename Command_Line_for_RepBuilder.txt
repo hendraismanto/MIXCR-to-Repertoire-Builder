@@ -1,8 +1,0 @@
-Command Line for RepBuilder
-
-cd /path/to/file /
-/sysimm/software/repertoire_builder/bin/repbuilder_local_batch /
--heavy-beta / -> could be changed by -light-alpha
-CGGA_D57_full_clones_preprocess_heavy_chain_AA.txt /
--type BCR / -> could be changed by TCR
--output-path /u33/hendra/ncbi/public/sra/Breast_cancer/CGGA_D57

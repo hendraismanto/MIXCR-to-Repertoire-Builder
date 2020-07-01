@@ -42,10 +42,8 @@ def main():
     parser = argparse.ArgumentParser(description = 'change MiXCR output into fasta for human and mouse aa/nt')
 
     parser.add_argument('-i', dest = 'input_file', help = 'Input file (tsv)')
-    parser.add_argument('-s', dest = 'species', default = 'human', help = 'Species (human or mouse) default = human')
-    parser.add_argument('-t', dest = 'type_job', default = 'all', help = 'type of job (aa+nt or aa or nt), default = aa&nt')
+    parser.add_argument('-t', dest = 'type_job', default = 'all', help = 'type of job (full V reg or CDR seq only or all), default = V reg and CDR seq')
     parser.add_argument('-o', dest = 'out_dir', help = 'directory of output')
-    parser.add_argument('-p', dest = 'pseudo_aa', default = None, help = 'generate only pseudo aa seq (keyword = pseudo)')
     args = parser.parse_args()
     
     os.makedirs(args.out_dir, exist_ok=True)
@@ -64,3 +62,8 @@ def main():
     logging.info('type of job: {}'.format(args.type_job))
     logging.info("out_dir: {}".format(os.path.abspath(args.out_dir)))
     
+if __name__ == '__main__':
+    start_time = time.time()
+    main()
+
+    print(("Done. Total run time: %s seconds" %(time.time() - start_time)))

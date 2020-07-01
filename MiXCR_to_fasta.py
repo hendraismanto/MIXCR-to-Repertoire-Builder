@@ -44,7 +44,7 @@ def preprocess_nt(data, database):
                                                                             'nSeqImputedCDR2', 'nSeqImputedFR3', 
                                                                             'nSeqImputedCDR3', 'nSeqImputedFR4']].fillna('')).str.upper()
     
-    #drop row containing NA in amino acid seq
+    #drop row containing NA in nucleotide seq
     data.dropna(subset = ['nSeqImputedFR1', 'nSeqImputedCDR1', 
                          'nSeqImputedFR2', 'nSeqImputedCDR2', 'nSeqImputedFR3', 'nSeqImputedFR4'], inplace = True)
     
@@ -83,8 +83,8 @@ def preprocess_aa(data, database):
                                                                             'aaSeqImputedCDR3', 'aaSeqImputedFR4']].fillna('')).str.upper()
     
     #drop row containing NA in amino acid seq
-    data.dropna(subset = ['nSeqImputedFR1', 'nSeqImputedCDR1', 
-                         'nSeqImputedFR2', 'nSeqImputedCDR2', 'nSeqImputedFR3', 'nSeqImputedFR4'], inplace = True)
+    data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 
+                         'aaSeqImputedFR2', 'aaSeqImputedCDR2', 'aaSeqImputedFR3', 'aaSeqImputedFR4'], inplace = True)
     
     #erase IG seq which nonfunctioning
     test_list = database
@@ -112,8 +112,8 @@ def preprocess_pseudo_aa(data, database):
     data['full ig'] = data['aaSeqImputedCDR1'].fillna('').str.cat(data[['aaSeqImputedCDR2', 'aaSeqImputedCDR3']].fillna('')).str.upper()
     
     #drop row containing NA in amino acid seq
-    data.dropna(subset = ['nSeqImputedFR1', 'nSeqImputedCDR1', 
-                         'nSeqImputedFR2', 'nSeqImputedCDR2', 'nSeqImputedFR3', 'nSeqImputedFR4'], inplace = True)
+    data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 
+                         'aaSeqImputedFR2', 'aaSeqImputedCDR2', 'aaSeqImputedFR3', 'aaSeqImputedFR4'], inplace = True)
     
     #erase IG seq which nonfunctioning
     test_list = database

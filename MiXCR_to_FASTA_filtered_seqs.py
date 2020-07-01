@@ -33,7 +33,7 @@ def import_pseudo_to_fasta(cohort, filename):
     #drop row containing NA in amino acid seq
     data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 
                          'aaSeqImputedFR2', 'aaSeqImputedCDR2', 'aaSeqImputedFR3', 'aaSeqImputedFR4'], inplace = True)
-    with open(filename + '.fasta', 'w') as f:
+    with open(filename + '_pseudo.fasta', 'w') as f:
         for index, row in data.iterrows():
             f.write('>' + cohort + '_' + filename + '_' + str(row['cloneId']) + '\n' + row['pseudo ig'] + '\n')
             

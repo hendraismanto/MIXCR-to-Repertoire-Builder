@@ -36,8 +36,12 @@ def import_pseudo_to_fasta(cohort, filename):
     #drop row containing NA in amino acid seq
     data.dropna(subset = ['aaSeqImputedFR1', 'aaSeqImputedCDR1', 
                          'aaSeqImputedFR2', 'aaSeqImputedCDR2', 'aaSeqImputedFR3', 'aaSeqImputedFR4'], inplace = True)
+    
+    #erase full ig containing out-of-frame indels (* and _)
+    clear_data = data[~data['pseudo ig'].str.contains('\*|_')]
+    
     with open(filename + '_pseudo.fasta', 'w') as f:
-        for index, row in data.iterrows():
+        for index, row in clear_data.iterrows():
             f.write('>' + cohort + '_' + filename + '_' + str(row['cloneId']) + '\n' + row['pseudo ig'] + '\n')
             
 def main():

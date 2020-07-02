@@ -19,8 +19,11 @@ def import_to_fasta(cohort, filename):
                           'aaSeqImputedFR2', 'aaSeqImputedCDR2', 
                           'aaSeqImputedFR3', 'aaSeqImputedFR4'], inplace = True)
     
+    #erase full ig containing out-of-frame indels (* and _)
+    clear_data = data[~data['full ig'].str.contains('\*|_')]
+    
     with open(filename + '.fasta', 'w') as f:
-        for index, row in data.iterrows():
+        for index, row in clear_data.iterrows():
             f.write('>' + cohort + '_' + filename + '_' + str(row['cloneId']) + '\n' + row['full ig'] + '\n')
             
 

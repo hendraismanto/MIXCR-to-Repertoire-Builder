@@ -1,6 +1,6 @@
 # MIXCR Output to Repertoire Builder Input
 
-make MiXCR output into FASTA that used in model building of Repertoire Builder and clustering in CD-HIT
+This code is for processing MiXCR output into FASTA that used in model building of Repertoire Builder and clustering in CD-HIT
 
 ## Getting Started
 
